@@ -20,7 +20,19 @@ export class Name {
 
     /** Expects that all Name components are properly masked */
     constructor(other: string[], delimiter?: string) {
-        throw new Error("needs implementation or deletion");
+        if (delimiter){
+            this.delimiter = delimiter;
+        }
+
+        this.components = other.map(o => {
+            return this.maskString(o)
+        });
+    }
+
+    private maskString(string: string): string {
+        return string
+            .replaceAll(ESCAPE_CHARACTER, ESCAPE_CHARACTER + ESCAPE_CHARACTER)
+            .replaceAll(this.delimiter, ESCAPE_CHARACTER + this.delimiter);
     }
 
     /**
@@ -28,8 +40,9 @@ export class Name {
      * Special characters are not escaped (creating a human-readable string)
      * Users can vary the delimiter character to be used
      */
+    // @methodtype conversion-method
     public asString(delimiter: string = this.delimiter): string {
-        throw new Error("needs implementation or deletion");
+        return this.components.join(delimiter);
     }
 
     /** 
@@ -37,37 +50,51 @@ export class Name {
      * Machine-readable means that from a data string, a Name can be parsed back in
      * The special characters in the data string are the default characters
      */
+    // @methodtype conversion-method
     public asDataString(): string {
-        throw new Error("needs implementation or deletion");
+        return this.components.map(component => {
+             return component
+                .replaceAll(ESCAPE_CHARACTER, ESCAPE_CHARACTER+ESCAPE_CHARACTER)
+                .replaceAll(DEFAULT_DELIMITER, ESCAPE_CHARACTER + DEFAULT_DELIMITER);
+        }).join(DEFAULT_DELIMITER);
     }
 
     /** Returns properly masked component string */
+    // @methodtype get-method
     public getComponent(i: number): string {
-        throw new Error("needs implementation or deletion");
+        return this.components[i];
     }
 
     /** Expects that new Name component c is properly masked */
+    // @methodtype set-method
     public setComponent(i: number, c: string): void {
-        throw new Error("needs implementation or deletion");
+        if (i > 0 && i < this.components.length) {
+            const maskString: string = this.maskString(c);
+            this.components.splice(i, 0, maskString);
+        }
     }
 
      /** Returns number of components in Name instance */
+     // @methodtype get-method
      public getNoComponents(): number {
-        throw new Error("needs implementation or deletion");
+        return this.components.length;
     }
 
     /** Expects that new Name component c is properly masked */
     public insert(i: number, c: string): void {
-        throw new Error("needs implementation or deletion");
+        this.setComponent(i, c);
     }
 
     /** Expects that new Name component c is properly masked */
     public append(c: string): void {
-        throw new Error("needs implementation or deletion");
+        this.components.push(this.maskString(c));
     }
 
+    // @methodtype command-method
     public remove(i: number): void {
-        throw new Error("needs implementation or deletion");
+        if (i > 0 && i < this.components.length) {
+            this.components.splice(i, 1);
+        }
     }
 
 }
