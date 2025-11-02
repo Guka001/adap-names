@@ -68,7 +68,7 @@ export class Name {
     /** Expects that new Name component c is properly masked */
     // @methodtype set-method
     public setComponent(i: number, c: string): void {
-        if (i > 0 && i < this.components.length) {
+        if (i >= 0 && i < this.components.length) {
             const maskString: string = this.maskString(c);
             this.components.splice(i, 0, maskString);
         }
@@ -92,7 +92,7 @@ export class Name {
 
     // @methodtype command-method
     public remove(i: number): void {
-        if (i > 0 && i < this.components.length) {
+        if (i >= 0 && i < this.components.length) {
             this.components.splice(i, 1);
         }
     }

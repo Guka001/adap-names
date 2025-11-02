@@ -57,3 +57,17 @@ describe("Escape character extravaganza", () => {
     expect(n.asString()).toBe("oss.cs.fau.de#people");
   });
 });
+
+
+describe("Equality Test", () => {
+  it("test equality conditions", () => {
+    const n1 = new StringArrayName(["oss", "cs", "fau", "de"]);
+    const n2 = new StringName("oss.cs.fau.de");
+    const n3 = new StringName("oss.cs.fau.com");
+
+    expect(n1.isEqual(n2)).toBe(true);
+    expect(n1.isEqual(n3)).toBe(false);
+    expect(n1.getHashCode()).toEqual(n2.getHashCode());
+    expect(n1.getHashCode()).not.toEqual(n3.getHashCode());
+  });
+});
