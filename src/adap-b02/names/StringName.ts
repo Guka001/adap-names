@@ -58,6 +58,7 @@ export class StringName extends AbstractName {
         if (n >= 0 && n < parts.length) {
             parts[n] = c;
             this.name = parts.join(this.delimiter);
+            this.noComponents = parts.length;
         }
     }
 
@@ -72,14 +73,17 @@ export class StringName extends AbstractName {
             }
 
             this.name = parts.join(this.delimiter);
+            this.noComponents = parts.length;
         }
     }
 
     public append(c: string): void {
         if (this.isEmpty()) {
             this.name = c;
+            this.noComponents = 1;
         } else {
             this.name += this.delimiter + c;
+            this.noComponents++;
         }
     }
 
@@ -88,6 +92,7 @@ export class StringName extends AbstractName {
         if (n >= 0 && n < parts.length) {
             parts.splice(n, 1);
             this.name = parts.join(this.delimiter);
+            this.noComponents = parts.length;
             return
         }
         throw new Error(`Index ${n} out of range`);
