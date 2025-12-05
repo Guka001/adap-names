@@ -30,4 +30,8 @@ export class RootNode extends Directory {
         // null operation
     }
 
+    public getBaseName(): string {
+        return super.doGetBaseName();
+    }
+
 }

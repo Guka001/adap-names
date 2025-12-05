@@ -3,6 +3,7 @@ import { InvalidStateException } from "../common/InvalidStateException";
 
 import { Name } from "../names/Name";
 import { Directory } from "./Directory";
+import {ServiceFailureException} from "../common/ServiceFailureException";
 
 export class Node {
 
@@ -33,7 +34,12 @@ export class Node {
     }
 
     public getBaseName(): string {
-        return this.doGetBaseName();
+        const bn = this.doGetBaseName();
+
+        if (!bn) {
+            throw new InvalidStateException("Invalid base name");
+        }
+        return bn;
     }
 
     protected doGetBaseName(): string {
@@ -57,7 +63,37 @@ export class Node {
      * @param bn basename of node being searched for
      */
     public findNodes(bn: string): Set<Node> {
-        throw new Error("needs implementation or deletion");
+        if (bn === null || bn === undefined) {
+            throw new IllegalArgumentException("basename should not be null");
+        }
+
+        let result: Set<Node> = new Set<Node>();
+
+        try
+        {
+            if(this.getBaseName() === bn){
+                result.add(this);
+            }
+        }
+        catch(err: any)
+        {
+            throw new ServiceFailureException("findNodes(): service failed", err);
+        }
+        finally
+        {
+            const self = this as any;
+
+            if (typeof self.getChildNodes === "function") {
+                for (const child of self.getChildNodes()) {
+                    const matches = child.findNodes(bn);
+                    for (const m of matches) {
+                        result.add(m);
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 
 }
